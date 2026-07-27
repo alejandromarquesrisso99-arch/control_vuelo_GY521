@@ -1,0 +1,6 @@
+build/
+bin/
+*.hex
+*.elf
+.DS_Store
+Thumbs.db
