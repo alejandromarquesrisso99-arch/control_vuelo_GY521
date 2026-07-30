@@ -46,7 +46,7 @@ void loop() {
   Serial.print(roll);
   Serial.print(",");
   //Serial.print("° \t| Pitch (Eje Y): ");
-  Serial.println(pitch);
+  Serial.print(pitch);
   //Serial.println("°");
 
   delay(20);

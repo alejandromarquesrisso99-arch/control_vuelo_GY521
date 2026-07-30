@@ -1,0 +1,51 @@
+import processing.serial.*;
+
+Serial puertoSerie;
+
+float roll = 0;
+float pitch = 0;
+
+void setup() {
+  size(800, 600, P3D); 
+  
+  // Asignamos el puerto COM6 directamente
+  String puertoNombre = "COM6"; 
+  
+  // Iniciamos la comunicación a 115200 baudios (igual que en Arduino)
+  puertoSerie = new Serial(this, puertoNombre, 115200);
+  puertoSerie.bufferUntil('\n'); 
+}
+
+void draw() {
+  background(30);
+  lights(); // Enciende luces 3D para dar volumen
+  
+  // Posicionar el origen en el centro de la pantalla
+  translate(width/2, height/2, 0);
+  
+  // Aplicar rotaciones según los ángulos del sensor (en radianes)
+  rotateX(radians(-pitch));
+  rotateZ(radians(roll));
+  
+  // Dibujar la placa (rectángulo 3D / caja estilizada)
+  fill(0, 150, 200);
+  stroke(255);
+  strokeWeight(2);
+  box(200, 100, 20); // Ancho: 200px, Alto: 100px, Grosor: 20px
+}
+
+// Se ejecuta automáticamente cada vez que llega una línea de texto del puerto serie
+void serialEvent(Serial puertoSerie) {
+  String cadenaData = puertoSerie.readStringUntil('\n');
+  
+  if (cadenaData != null) {
+    cadenaData = trim(cadenaData); // Limpia espacios en blanco
+    String[] datos = split(cadenaData, ',');
+    
+    // Si la línea contiene exactamente los 2 valores (roll y pitch)
+    if (datos.length == 2) {
+      roll = float(datos[0]);
+      pitch = float(datos[1]);
+    }
+  }
+}
